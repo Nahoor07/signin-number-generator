@@ -12,7 +12,7 @@ The number generator is the only screen with logic. Clicking **Generieren** fill
 | Desktop | Mobile |
 | --- | --- |
 | ![Sign in, desktop](docs/screenshots/sign-in-desktop.png) | ![Sign in, mobile](docs/screenshots/sign-in-mobile.png) |
-| ![Number generator, desktop](docs/screenshots/number-generator-desktop-generated.png) | ![Number generator, mobile](docs/screenshots/number-generator-mobile.png) |
+| ![Number generator, desktop ](docs/screenshots/number-generator-desktop-generated.png) | ![Number generator, mobile](docs/screenshots/number-generator-mobile.png) |
 
 ---
 
