@@ -1,11 +1,17 @@
+import type { ReactNode } from "react";
+
 import styles from "./Header.module.css";
 
 /*
- * The Figma header contains a "Logo" instance on the left and a language flag
- * and settings button on the right. The Logo's main component is empty (no
- * layers, no fill) and the flag and settings had no function, so the header is
- * kept only for its height and spacing.
+ * The Figma header also contains a "Logo" instance on the left. Its main
+ * component is empty (no layers, no fill), so it renders nothing in Figma and
+ * is left out here. The actions are right-aligned, so the logo slot has no
+ * influence on the layout.
  */
-export function Header() {
-  return <header className={styles.header} />;
+export function Header({ children }: { children: ReactNode }) {
+  return (
+    <header className={styles.header}>
+      <div className={styles.actions}>{children}</div>
+    </header>
+  );
 }

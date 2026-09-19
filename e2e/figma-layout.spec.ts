@@ -45,6 +45,8 @@ const screens: {
       { name: "eye button", locate: (p) => p.getByRole("button", { name: "Show password" }), expected: { x: 850, y: 522.5, width: 40, height: 40 } },
       { name: "generate numbers row", locate: (p) => p.getByRole("link", { name: "Generate numbers" }).locator(".."), expected: { x: 550, y: 593, width: 340, height: 22 } },
       { name: "sign in button", locate: (p) => p.getByRole("button", { name: "Sign in" }), expected: { x: 550, y: 639, width: 340, height: 48 } },
+      { name: "flag button", locate: (p) => p.getByRole("button", { name: "Language: English" }), expected: { x: 1376, y: 16, width: 40, height: 40 } },
+      { name: "flag image", locate: (p) => p.locator("header img"), expected: { x: 1382.17, y: 26, width: 27.65, height: 20 } },
     ],
   },
   {
@@ -60,6 +62,8 @@ const screens: {
       { name: "last digit box", locate: (p) => p.getByTestId("digit-box").last(), expected: { x: 841.67, y: 494.5, width: 48.33, height: 53 } },
       { name: "generate button", locate: (p) => p.getByRole("button", { name: "Generieren" }), expected: { x: 550, y: 571.5, width: 340, height: 48 } },
       { name: "back link", locate: (p) => p.getByRole("link", { name: "Zurück" }), expected: { x: 684.5, y: 643.5, width: 71, height: 22 }, outfit: true },
+      { name: "flag", locate: (p) => p.getByRole("img", { name: "Deutsch" }), expected: { x: 1334, y: 26, width: 34, height: 20 } },
+      { name: "settings button", locate: (p) => p.getByRole("button", { name: "Einstellungen" }), expected: { x: 1376, y: 16, width: 40, height: 40 } },
     ],
   },
   {
@@ -68,6 +72,7 @@ const screens: {
     viewport: { width: 375, height: 800 },
     checks: [
       { name: "header", locate: (p) => p.locator("header"), expected: { x: 0, y: 0, width: 375, height: 64 } },
+      { name: "flag button", locate: (p) => p.getByRole("button", { name: "Language: English" }), expected: { x: 319, y: 12, width: 40, height: 40 } },
       { name: "card", locate: (p) => p.locator("section"), expected: { x: 16, y: 88, width: 343, height: 424 } },
       { name: "heading", locate: (p) => p.getByRole("heading"), expected: { x: 158, y: 128, width: 59, height: 30 }, textTolerance: true },
       { name: "subline", locate: (p) => p.getByText("Don't have an account?").locator(".."), expected: { x: 72.5, y: 170, width: 230, height: 22 }, outfit: true },
@@ -83,6 +88,7 @@ const screens: {
     viewport: { width: 375, height: 589 },
     checks: [
       { name: "header", locate: (p) => p.locator("header"), expected: { x: 0, y: 0, width: 375, height: 64 } },
+      { name: "flag", locate: (p) => p.getByRole("img", { name: "Deutsch" }), expected: { x: 327, y: 22, width: 32, height: 20 } },
       { name: "card", locate: (p) => p.locator("section"), expected: { x: 16, y: 88, width: 343, height: 381 } },
       { name: "heading", locate: (p) => p.getByRole("heading"), expected: { x: 108, y: 128, width: 159, height: 30 }, textTolerance: true },
       { name: "description", locate: (p) => p.getByText(/^Generiere 6 Zahlen/), expected: { x: 40, y: 174, width: 295, height: 44 } },
@@ -120,10 +126,11 @@ for (const screen of screens) {
 }
 
 test.describe("Screen-specific details", () => {
-  test("mobile number generator has no background image and no header actions", async ({ page }) => {
+  test("mobile number generator has no background image and hides the settings button", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 589 });
     await page.goto("/number-generator");
 
+    await expect(page.getByRole("button", { name: "Einstellungen" })).toBeHidden();
     const backgroundDisplay = await page
       .locator("[aria-hidden='true']")
       .first()

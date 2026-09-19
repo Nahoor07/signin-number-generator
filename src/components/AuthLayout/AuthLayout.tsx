@@ -6,6 +6,8 @@ import { Header } from "@/components/Header/Header";
 import styles from "./AuthLayout.module.css";
 
 type AuthLayoutProps = {
+  /** Right-hand side of the top bar (flag, settings, …). */
+  headerActions: ReactNode;
   /**
    * The mobile "Verify" frame in Figma has a plain white page without the
    * blurred background image, the mobile sign-in frame has it. This flag
@@ -16,13 +18,14 @@ type AuthLayoutProps = {
 };
 
 export function AuthLayout({
+  headerActions,
   showBackgroundOnMobile = true,
   children,
 }: AuthLayoutProps) {
   return (
     <div className={styles.page}>
       <Background className={showBackgroundOnMobile ? undefined : styles.desktopOnly} />
-      <Header />
+      <Header>{headerActions}</Header>
       <main className={styles.main}>{children}</main>
     </div>
   );
