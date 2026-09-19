@@ -1,0 +1,8 @@
+.heading {
+  color: var(--text-primary);
+  font-family: var(--font-barlow), sans-serif;
+  font-size: var(--h4-size);
+  font-weight: 600;
+  line-height: var(--h4-line-height);
+  letter-spacing: 0;
+}

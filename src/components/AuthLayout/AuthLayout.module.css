@@ -1,0 +1,37 @@
+.page {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  /* The layer blur bleeds past the edges; the Figma frame clips it the same way */
+  overflow: hidden;
+  background: var(--background-default);
+}
+
+/*
+ * Desktop: the header is absolutely positioned (as in Figma) and the card is
+ * centred in the whole viewport, not in the space below the header. The
+ * vertical padding is symmetric, so the centre does not move, but the card can
+ * never slide under the header on short screens.
+ */
+.main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--header-height) + 24px) 16px;
+}
+
+@media (max-width: 599.98px) {
+  /* Mobile frames: header in the flow, 24px gap, 16px side gutter, 120px bottom padding */
+  .main {
+    display: block;
+    flex: none;
+    padding: 24px 16px 120px;
+  }
+
+  .desktopOnly {
+    display: none;
+  }
+}

@@ -1,0 +1,30 @@
+/* Figma "IconButton", Size=M */
+.iconButton {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: background-color 150ms ease;
+}
+
+.default {
+  color: var(--action-active);
+}
+
+.inherit {
+  color: var(--text-primary);
+}
+
+/* State=Hovered in the Figma component set */
+.iconButton:hover {
+  background-color: var(--action-hover);
+}
+
+.iconButton:focus-visible {
+  outline: none;
+  background-color: var(--action-hover);
+  box-shadow: var(--focus-ring);
+}

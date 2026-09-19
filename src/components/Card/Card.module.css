@@ -1,0 +1,16 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  width: var(--card-width);
+  max-width: 100%;
+  padding: var(--card-padding-y) var(--card-padding-x);
+  border-radius: var(--card-radius);
+  background: var(--background-default);
+  box-shadow: var(--card-shadow);
+}
+
+@media (max-width: 599.98px) {
+  .card {
+    width: 100%;
+  }
+}
