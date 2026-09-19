@@ -1,0 +1,53 @@
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 32px;
+  text-align: center;
+}
+
+.subline {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.getStarted {
+  color: var(--primary-main);
+  font-family: var(--font-outfit), sans-serif;
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.generateRow {
+  height: 22px;
+  text-align: right;
+}
+
+.generateLink {
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.getStarted:hover,
+.generateLink:hover {
+  text-decoration: underline;
+}
+
+.getStarted:focus-visible,
+.generateLink:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
