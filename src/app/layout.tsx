@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Barlow, Outfit, Public_Sans } from "next/font/google";
 
+import { LanguageProvider } from "@/i18n/LanguageProvider";
+
 import "./globals.css";
 
 // Only the weights that appear in the Figma file are loaded.
@@ -39,7 +41,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${barlow.variable} ${publicSans.variable} ${outfit.variable}`}>
-      <body>{children}</body>
+      <body>
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
     </html>
   );
 }

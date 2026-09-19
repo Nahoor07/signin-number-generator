@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
+import { LanguageProvider, useLocale } from "@/i18n/LanguageProvider";
 import * as generator from "@/lib/generate-unique-digits";
 
 import { NumberGenerator } from "./NumberGenerator";
@@ -51,5 +52,28 @@ describe("NumberGenerator", () => {
     const digits = boxTexts();
     expect(new Set(digits).size).toBe(6);
     digits.forEach((digit) => expect(digit).toMatch(/^[0-9]$/));
+  });
+
+  it("follows the language switch and keeps the result", async () => {
+    function Toggle() {
+      const { toggle } = useLocale("de");
+      return <button onClick={toggle}>toggle</button>;
+    }
+    render(
+      <LanguageProvider>
+        <Toggle />
+        <NumberGenerator />
+      </LanguageProvider>,
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: "Generieren" }));
+    const digits = boxTexts();
+    await userEvent.click(screen.getByRole("button", { name: "toggle" }));
+
+    expect(screen.getByRole("heading")).toHaveTextContent("Generate numbers");
+    expect(screen.getByRole("button", { name: "Generate" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Back" })).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent(`Generated numbers: ${digits.join(", ")}`);
+    expect(boxTexts()).toEqual(digits);
   });
 });

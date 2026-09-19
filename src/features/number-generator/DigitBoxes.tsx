@@ -4,16 +4,19 @@ type DigitBoxesProps = {
   /** null renders the empty state. */
   digits: readonly number[] | null;
   count: number;
+  /** Screen reader texts, passed in so they follow the active language. */
+  resultLabel: string;
+  emptyLabel: string;
 };
 
-export function DigitBoxes({ digits, count }: DigitBoxesProps) {
+export function DigitBoxes({ digits, count, resultLabel, emptyLabel }: DigitBoxesProps) {
   const boxes = Array.from({ length: count }, (_, index) => digits?.[index] ?? null);
 
   return (
     // <output> is a live region, so screen readers announce every new result.
     <output className={styles.row}>
       <span className="visually-hidden">
-        {digits ? `Generierte Zahlen: ${digits.join(", ")}` : "Noch keine Zahlen generiert"}
+        {digits ? `${resultLabel}: ${digits.join(", ")}` : emptyLabel}
       </span>
       {boxes.map((digit, index) => (
         <span

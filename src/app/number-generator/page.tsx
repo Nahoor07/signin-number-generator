@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 
 import { AuthLayout } from "@/components/AuthLayout/AuthLayout";
-import { Flag } from "@/components/Flag/Flag";
-import { IconButton } from "@/components/IconButton/IconButton";
-import { SettingsIcon } from "@/components/icons/icons";
+import { LanguageSwitch } from "@/components/LanguageSwitch/LanguageSwitch";
 import { NumberGenerator } from "@/features/number-generator/NumberGenerator";
+import { SettingsButton } from "@/features/number-generator/SettingsButton";
 
 import styles from "./page.module.css";
 
@@ -18,11 +17,9 @@ export default function NumberGeneratorPage() {
       showBackgroundOnMobile={false}
       headerActions={
         <>
-          <Flag locale="de" className={styles.flag} />
+          <LanguageSwitch figmaLocale="de" variant="plain" flagClassName={styles.flag} />
           <span className={styles.settings}>
-            <IconButton color="inherit" aria-label="Einstellungen">
-              <SettingsIcon />
-            </IconButton>
+            <SettingsButton />
           </span>
         </>
       }

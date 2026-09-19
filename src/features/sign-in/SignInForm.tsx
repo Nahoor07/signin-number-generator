@@ -7,19 +7,23 @@ import { Card } from "@/components/Card/Card";
 import { Heading } from "@/components/Heading/Heading";
 import { PasswordField } from "@/components/PasswordField/PasswordField";
 import { TextField } from "@/components/TextField/TextField";
+import { useDocumentTitle, useLocale } from "@/i18n/LanguageProvider";
 
 import styles from "./SignInForm.module.css";
 
 export function SignInForm() {
+  const { locale, t } = useLocale("en");
+  useDocumentTitle(t.signIn.title);
+
   return (
-    <Card aria-labelledby="sign-in-title">
+    <Card aria-labelledby="sign-in-title" lang={locale}>
       <div className={styles.intro}>
-        <Heading id="sign-in-title">Sign in</Heading>
+        <Heading id="sign-in-title">{t.signIn.title}</Heading>
         <p className={styles.subline}>
-          <span>{"Don't have an account?"}</span>
+          <span>{t.signIn.noAccount}</span>
           {/* Registration is out of scope, the link only needs to look right. */}
           <a href="#" className={styles.getStarted}>
-            Get started
+            {t.signIn.getStarted}
           </a>
         </p>
       </div>
@@ -27,19 +31,21 @@ export function SignInForm() {
       {/* Authentication is out of scope: submitting must not reload the page
           or put the credentials into the URL as a GET query. */}
       <form className={styles.form} onSubmit={(event) => event.preventDefault()} noValidate>
-        <TextField label="Email address" type="email" name="email" autoComplete="email" />
+        <TextField label={t.signIn.email} type="email" name="email" autoComplete="email" />
         <PasswordField
-          label="Password"
+          label={t.signIn.password}
           name="password"
-          placeholder="6+ characters"
+          placeholder={t.signIn.passwordPlaceholder}
           autoComplete="current-password"
+          showLabel={t.signIn.showPassword}
+          hideLabel={t.signIn.hidePassword}
         />
         <div className={styles.generateRow}>
           <Link href="/number-generator" className={styles.generateLink}>
-            Generate numbers
+            {t.signIn.generateNumbers}
           </Link>
         </div>
-        <Button type="submit">Sign in</Button>
+        <Button type="submit">{t.signIn.submit}</Button>
       </form>
     </Card>
   );

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 
 import { AuthLayout } from "@/components/AuthLayout/AuthLayout";
-import { Flag } from "@/components/Flag/Flag";
-import { IconButton } from "@/components/IconButton/IconButton";
+import { LanguageSwitch } from "@/components/LanguageSwitch/LanguageSwitch";
 import { SignInForm } from "@/features/sign-in/SignInForm";
 
 import styles from "./page.module.css";
@@ -14,11 +13,7 @@ export const metadata: Metadata = {
 export default function SignInPage() {
   return (
     <AuthLayout
-      headerActions={
-        <IconButton aria-label="Language: English">
-          <Flag locale="en" className={styles.flag} decorative />
-        </IconButton>
-      }
+      headerActions={<LanguageSwitch figmaLocale="en" variant="icon-button" flagClassName={styles.flag} />}
     >
       <SignInForm />
     </AuthLayout>

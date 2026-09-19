@@ -73,13 +73,18 @@ src/
 │   ├── TextField/                        Filled text field (label + input + end adornment)
 │   ├── PasswordField/                    TextField + eye button (client component)
 │   ├── Flag/                             Flag image (next/image)
+│   ├── LanguageSwitch/                   Clickable flag that switches EN ↔ DE (client component)
 │   └── icons/icons.tsx                   SVG icons exported from the Figma vectors
 ├── features/                             Screen-specific composition
 │   ├── sign-in/SignInForm.tsx            Sign In card
 │   └── number-generator/
 │       ├── NumberGenerator.tsx           Card + state (client component)
 │       ├── DigitBoxes.tsx                The six boxes (empty / filled)
+│       ├── SettingsButton.tsx            Settings icon button from the header (no function)
 │       └── NumberGenerator.test.tsx      Component test
+├── i18n/
+│   ├── messages.ts                       All texts in English and German
+│   └── LanguageProvider.tsx              Language state (root layout) + useLocale hook
 └── lib/
     ├── generate-unique-digits.ts         Generator logic, framework-free
     └── generate-unique-digits.test.ts    Unit tests incl. exhaustive uniformity proof
@@ -195,7 +200,7 @@ Both screens are built from the same parts, just as they share components in Fig
 
 ### 3.8 Comparing the result with Figma
 
-1. **Automated layout check** – [`e2e/figma-layout.spec.ts`](e2e/figma-layout.spec.ts) opens every screen at the exact Figma frame size and measures **38 elements** (card, heading, fields, buttons, digit boxes, flags, icon buttons …). Each box's x, y, width and height is compared with the absolute position of the matching Figma layer, as read by the script. Layout boxes must match within **1 px**; text-sized boxes within 2.5 px, because the browser rasterises fonts slightly differently from Figma. A second test checks the computed colours, shadow and radius.
+1. **Automated layout check** – [`e2e/figma-layout.spec.ts`](e2e/figma-layout.spec.ts) opens every screen at the exact Figma frame size and measures **38 elements** (card, heading, fields, buttons, digit boxes, flags, icon buttons …). Each box's x, y, width and height is compared with the absolute position of the matching Figma layer, as read by the script. Layout boxes must match within **1 px**; text-sized boxes within 2.5 px, because the browser rasterises fonts slightly differently from Figma. A second test checks the computed colours, shadow and radius. Behaviour tests cover the generator, the navigation between the screens and the language switch.
 2. **Screenshots** at the frame sizes (`docs/screenshots/`), compared side by side with the frames in Figma.
 3. **Manual check** of hover and focus states and of the in-between sizes listed above.
 
@@ -288,7 +293,7 @@ At this size it costs almost nothing; the button click itself is far more expens
 ### 4.6 Tests
 
 - [`generate-unique-digits.test.ts`](src/lib/generate-unique-digits.test.ts): length, uniqueness and range (10,000 runs), exact number and ranges of random calls, deterministic results for fixed choices, the **exhaustive 151,200-case proof**, even distribution per position, invalid arguments, rejection sampling in `cryptoRandomInt`.
-- [`NumberGenerator.test.tsx`](src/features/number-generator/NumberGenerator.test.tsx): empty state before the first click, rendering of each new result, screen-reader text.
+- [`NumberGenerator.test.tsx`](src/features/number-generator/NumberGenerator.test.tsx): empty state before the first click, rendering of each new result, screen-reader text, and switching the language without losing the result.
 - [`e2e/figma-layout.spec.ts`](e2e/figma-layout.spec.ts): 20 clicks in a real browser, each giving six unique digits from 0 to 9.
 
 ---
@@ -304,8 +309,15 @@ None of these change what is visible in Figma. The default state of every screen
   - Links: underline on hover.
   - Every interactive element has a visible **keyboard focus ring** (`:focus-visible`), so the screens can be used without a mouse.
 - **Show/hide password.** The eye icon in Figma suggests this, so the eye button toggles the password visibility. The default is the Figma state: hidden, closed eye.
+- **Working language switch.** The flag in the header suggests a language choice, so clicking it switches all texts between English and German. How it works:
+  - Every screen **starts in its Figma language** (Sign In in English, the generator in German), so the default state stays exactly as designed. The texts only change after a click.
+  - The flag always shows the **active** language. On Sign In it stays inside the 40 × 40 icon button; on the generator the button is exactly the size of the flag image, so both layouts are unchanged.
+  - All texts live in one file, [`src/i18n/messages.ts`](src/i18n/messages.ts). The English and German texts that exist in Figma are used as they are; the missing translations (e.g. "Anmelden", "Generate") are my own.
+  - The choice is kept in a React context in the root layout. The layout stays mounted during client-side navigation, so the language carries over between the two screens. The card's `lang` attribute and the browser tab title follow the language.
+  - The choice is **not persisted** on purpose: a reload shows the Figma state again, both pages stay statically pre-rendered, and the server HTML always matches the first client render (no flash of the wrong language). A cookie or a `/de` route prefix would remember it, see section 8.
+- **Hint on the settings icon.** Settings are not part of this task. A native `title` tooltip on hover ("Einstellungen – nicht Teil dieser Aufgabe") says so, instead of leaving the user clicking a button that does nothing. It only appears on hover; the default state is unchanged.
 - **Navigation between the screens.** "Generate numbers" opens the generator and "Zurück" returns to Sign In, so the two screens form a flow.
-- **Accessibility:** real `<label>`s for the inputs, `aria-label`s for icon-only buttons, `<h1>` headings, and `lang="de"` on the German card (so screen readers pronounce it correctly). The result lives in an `<output>` element: screen readers announce every new result ("Generierte Zahlen: 3, 7, 1, 0, 9, 4") instead of reading dashes.
+- **Accessibility:** real `<label>`s for the inputs, `aria-label`s for icon-only buttons, `<h1>` headings, and a `lang` attribute on each card that follows the active language (so screen readers pronounce it correctly). The result lives in an `<output>` element: screen readers announce every new result ("Generierte Zahlen: 3, 7, 1, 0, 9, 4") instead of reading dashes.
 - **Safe form behaviour:** submitting the sign-in form does nothing (login is out of scope), and in particular does not reload the page with the password in the URL, which a plain `<form>` would do.
 
 ---
@@ -314,7 +326,7 @@ None of these change what is visible in Figma. The default state of every screen
 
 | Used | Why |
 | --- | --- |
-| **Next.js 16 (App Router) + TypeScript** | Required by the brief. Both pages are statically pre-rendered; only the two interactive parts (password field, generator) are client components. |
+| **Next.js 16 (App Router) + TypeScript** | Required by the brief. Both pages are statically pre-rendered; only the interactive parts (password field, generator, language switch) are client components. |
 | **CSS Modules + CSS custom properties** | Built into Next.js, no runtime cost. The Figma values can be written 1:1 (`height: 53px`, `gap: 24px`) and the variables mirror the Figma tokens. |
 | **next/font** | Self-hosted Google Fonts without layout shift (see 3.4). |
 | **next/image** | Optimised flag images. |
@@ -326,6 +338,7 @@ None of these change what is visible in Figma. The default state of every screen
 | **MUI / Minimal UI** (the kit the Figma file is based on) | Tempting because the components have the same names, but it adds a large runtime and theme system for two screens. Getting pixel-exact values would mean overriding its defaults everywhere. |
 | **Tailwind CSS** | Would work, but nearly every value here is a one-off from Figma (`h-[53px]`, `shadow-[0_24px_48px_…]`). Named CSS variables stay easier to trace back to Figma. |
 | **Icon library** (Iconify etc.) | Only four icons are needed. Exporting their exact paths from the file is lighter and guarantees the same shapes. |
+| **i18n library** (`next-intl`, `react-i18next`) | Two languages and about 25 strings. A typed object plus one React context covers it; `messages.ts` would move into a library unchanged if more languages or routes are added. |
 | **Form or state libraries** | There is no validation or submission logic, and one `useState` covers the generator. |
 
 ---
@@ -359,7 +372,7 @@ What I would do with more time:
 - **Pixel diff against Figma exports.** Export the four frames as PNG via the Figma API and compare them pixel by pixel with the screenshots in CI. The current test compares geometry and colours, not pixels.
 - **Clarify the "dotted separator line"** from the brief with the design team (see 3.9) and add it if it is wanted.
 - **Dark mode:** the file already has a *Dark* mode for the `Theme` variables, so the CSS variables could switch with `prefers-color-scheme`.
-- **Internationalisation:** the flag suggests a language switch, and the texts are currently mixed EN/DE exactly as in Figma. A small i18n layer (e.g. `next-intl`) would make the flag work.
+- **Remember the language:** store the choice in a cookie (or use `/en` and `/de` routes) so it survives a reload, and set `<html lang>` on the server. With more languages, move `messages.ts` into `next-intl`.
 - **Tablet layouts:** Figma only defines 375 and 1440 px. Sizes in between currently use the desktop layout; a designer should confirm this.
 - **Logo:** the Logo component in the file is empty. As soon as there is a real logo, it goes into the reserved slot on the left of the header.
 - **Performance:** serve the background as AVIF/WebP, or pre-blurred, to save the live blur on low-end devices.

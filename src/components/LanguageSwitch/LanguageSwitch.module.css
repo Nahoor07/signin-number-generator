@@ -1,0 +1,15 @@
+/* No box of its own: the button is exactly the flag, as in the Figma frame. */
+.plain {
+  display: inline-flex;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+.plain:hover {
+  opacity: 0.8;
+}
+
+.plain:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
