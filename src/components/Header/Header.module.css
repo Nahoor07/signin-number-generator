@@ -8,14 +8,6 @@
   padding: 0 var(--header-padding-x);
 }
 
-.actions {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
 @media (max-width: 599.98px) {
   .header {
     position: static;

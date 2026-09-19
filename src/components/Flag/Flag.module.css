@@ -1,6 +1,0 @@
-.flag {
-  flex-shrink: 0;
-  height: 20px;
-  /* Figma image fill mode "FILL" */
-  object-fit: cover;
-}
